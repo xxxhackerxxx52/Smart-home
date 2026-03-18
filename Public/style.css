@@ -1,0 +1,695 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    min-height: 100vh;
+    padding: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Панель доступности */
+.accessibility-bar {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 50px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.accessibility-bar button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+
+.accessibility-bar button:hover {
+    transform: scale(1.1);
+    background: #45a049;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    padding: 30px;
+    margin-top: 60px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #e0e0e0;
+}
+
+h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.connection-panel {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.status {
+    background: #f8f9fa;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.status i {
+    font-size: 1.2rem;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border: 2px solid #e8e8e8;
+}
+
+.card h2 {
+    color: #3498db;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Кнопки */
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 5px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(102, 126, 234, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.btn-control {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-control:hover {
+    background: #2980b9;
+    transform: translateX(5px);
+}
+
+.btn-control.medical {
+    background: #e74c3c;
+}
+
+.btn-control.accessibility {
+    background: #9b59b6;
+}
+
+.btn-control.emergency {
+    background: #e74c3c;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+
+/* Сетка функций */
+.functions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin: 25px 0;
+}
+
+.function-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border: 2px solid #f0f0f0;
+    transition: transform 0.3s;
+}
+
+.function-card:hover {
+    transform: translateY(-5px);
+    border-color: #3498db;
+}
+
+.function-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.function-card h3 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.4rem;
+}
+
+/* Контролы температуры */
+.temp-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 15px 0;
+}
+
+.temp-display {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 15px;
+    font-size: 2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Слайдер */
+.slider {
+    width: 100%;
+    height: 25px;
+    -webkit-appearance: none;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 12px;
+    margin: 15px 0;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 35px;
+    height: 35px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+/* Голосовое управление */
+.voice-controls {
+    text-align: center;
+    padding: 20px;
+}
+
+.btn-voice {
+    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    border-radius: 50px;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s;
+}
+
+.btn-voice:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 176, 155, 0.3);
+}
+
+.voice-commands ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.voice-commands li {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #00b09b;
+}
+
+/* Яндекс Алиса */
+.btn-alice {
+    background: linear-gradient(135deg, #FF0000 0%, #FFCC00 100%);
+    color: white;
+    border: none;
+    padding: 18px 35px;
+    border-radius: 12px;
+    font-size: 17px;
+    cursor: pointer;
+    margin: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.alice-commands {
+    margin-top: 20px;
+}
+
+.alice-commands input {
+    width: 70%;
+    padding: 15px;
+    border: 2px solid #FFCC00;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+/* Экстренная панель */
+.emergency-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.emergency-btn {
+    padding: 25px 15px;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s;
+}
+
+.emergency-btn:hover {
+    transform: scale(1.05);
+}
+
+.emergency-btn.sos {
+    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+    animation: sosPulse 1.5s infinite;
+}
+
+@keyframes sosPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 65, 108, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(255, 65, 108, 0.8); }
+}
+
+.emergency-btn.call-help {
+    background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+}
+
+.emergency-btn.fire {
+    background: linear-gradient(135deg, #ff9500 0%, #ff5e3a 100%);
+}
+
+.emergency-btn.police {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+}
+
+/* Лог событий */
+.log-section {
+    margin-top: 30px;
+}
+
+.log-container {
+    background: #1a1a1a;
+    color: #00ff00;
+    padding: 20px;
+    border-radius: 10px;
+    height: 250px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.log-entry {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Медицинский монитор */
+.health-monitor {
+    text-align: center;
+}
+
+.health-metric {
+    background: #f8f9fa;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 18px;
+}
+
+/* Напоминания */
+.reminders {
+    text-align: left;
+}
+
+.reminder-item {
+    background: #e3f2fd;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 4px solid #2196F3;
+}
+
+/* Списки устройств */
+.devices-list {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.device-item {
+    padding: 12px;
+    margin: 8px 0;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .functions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .connection-panel {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-primary, .btn-control, .emergency-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+/* High Contrast Mode */
+body.high-contrast {
+    background: black !important;
+    color: white !important;
+}
+
+body.high-contrast .function-card {
+    background: #000 !important;
+    border: 3px solid yellow !important;
+}
+
+/* Large Text Mode */
+body.large-text {
+    font-size: 24px !important;
+}
+
+body.large-text .btn-control {
+    padding: 20px 30px !important;
+    font-size: 20px !important;
+}
+/* Добавь эти стили в конец файла style.css */
+
+/* Яндекс Алиса стили */
+.alice-controls {
+    background: linear-gradient(135deg, #FF0000 0%, #FFCC00 100%);
+    padding: 25px;
+    border-radius: 15px;
+    margin: 20px 0;
+    color: white;
+}
+
+.btn-alice {
+    background: rgba(255, 255, 255, 0.9);
+    color: #FF0000;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px;
+    transition: all 0.3s;
+}
+
+.btn-alice:hover {
+    background: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3);
+}
+
+.btn-alice-small {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 5px;
+    transition: all 0.3s;
+}
+
+.btn-alice-small:hover {
+    background: white;
+    color: #FF0000;
+}
+
+.alice-panel {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.quick-commands {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.alice-voice {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+.voice-commands {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.voice-commands span {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    border-left: 3px solid #FFCC00;
+}
+
+.alice-response {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.alice-message {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    animation: fadeIn 0.5s;
+}
+
+.alice-message .avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.message-content {
+    background: white;
+    padding: 12px 18px;
+    border-radius: 18px;
+    color: #333;
+    max-width: 70%;
+}
+
+.message-text {
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.message-time {
+    font-size: 12px;
+    color: #999;
+    text-align: right;
+    margin-top: 5px;
+}
+
+.qr-container {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    color: #333;
+}
+
+.error-message {
+    background: #e74c3c;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.5s;
+}
+
+.error-message button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Адаптивность для Алисы */
+@media (max-width: 768px) {
+    .alice-controls {
+        padding: 15px;
+    }
+    
+    .btn-alice {
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+    
+    .quick-commands {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .voice-commands {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,2 @@
+﻿https://oauth.yandex.ru/authorize?response_type=token&client_id=9c14cb6339a34407b5cc409fcaff6732&force_confirm=true
+Если токен истек берем отсюда
