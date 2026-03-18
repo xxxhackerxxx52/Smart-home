@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <!-- Оптимизация для мобильных: правильное масштабирование без принудительного увеличения -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Умный дом для людей с ОВЗ</title>
+    <!-- Шрифт для дислексии OpenDyslexic -->
+    <link href="https://fonts.cdnfonts.com/css/open-dyslexic" rel="stylesheet">
+    <!-- Font Awesome иконки -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ========== СБРОС И ОСНОВНЫЕ ПЕРЕМЕННЫЕ ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ========== ВКЛАДКИ ========== */
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* плавный скролл на iOS */
+            scrollbar-width: none; /* скрываем скроллбар для Firefox */
+        }
+        .tabs::-webkit-scrollbar {
+            display: none; /* скрываем скроллбар для Chrome/Safari */
+        }
+
+        .tab-btn {
+            padding: 18px 30px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ========== КАРТОЧКИ ========== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid #f0f0f0;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ========== КНОПКИ ========== */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            margin: 5px;
+            /* минимальный размер для тач-устройств */
+            min-height: 44px;
+            min-width: 44px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--secondary-color);
+            color: white;
+        }
+        .btn-success:hover {
+            background: #27ae60;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #d68910;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .badge {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+        .badge.online { background-color: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+        .badge.offline { background-color: #e74c3c; box-shadow: 0 0 8px #e74c3c; }
+
+        /* ========== ЛОГ ========== */
+        .log-container {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 15px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            margin-top: 20px;
+        }
+
+        .log-entry {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ========== ЭКСТРЕННАЯ ПАНЕЛЬ ========== */
+        .emergency-panel {
+            background: linear-gradient(135deg, #ffcccc, #ff9999);
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid var(--danger-color);
+            text-align: center;
+        }
+
+        .sos-button {
+            animation: sosPulse 1.5s infinite;
+            padding: 20px 40px;
+            font-size: 24px;
+        }
+
+        @keyframes sosPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
+        /* ========== ГОЛОСОВАЯ ОБРАТНАЯ СВЯЗЬ ========== */
+        .voice-feedback {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .voice-animation {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ========== УВЕДОМЛЕНИЯ ========== */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            z-index: 1000;
+            animation: slideInRight 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 90%;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .notification-success { background: var(--secondary-color); }
+        .notification-error { background: var(--danger-color); }
+        .notification-info { background: var(--primary-color); }
+
+        /* ========== AI ПОМОЩНИК ========== */
+        #aiLauncherBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            min-width: unset; /* отключаем минимальную ширину для круглой кнопки */
+        }
+        #aiChatContainer {
+            display: none;
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            width: 400px;
+            height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 10001;
+            overflow: hidden;
+            border: 3px solid #667eea;
+            font-family: 'Segoe UI', sans-serif;
+            flex-direction: column;
+        }
+        #aiChatHeader {
+            background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #aiChatMessages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .ai-message {
+            background: #667eea;
+            color: white;
+            align-self: flex-start;
+            padding: 10px 15px;
+            border-radius: 18px 18px 18px 0;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background: #e0e0e0;
+            color: black;
+            align-self: flex-end;
+            padding: 10px 15px;
+            border-radius: 18px 18px 0 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        #aiInputArea {
+            display: flex;
+            border-top: 1px solid #ccc;
+            padding: 10px;
+            background: white;
+        }
+        #aiInput {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            font-size: 16px;
+            min-height: 44px;
+        }
+        #aiSendBtn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 20px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            min-height: 44px;
+            min-width: 70px;
+        }
+
+        /* ========== МЕДИЦИНСКИЙ МОНИТОРИНГ ========== */
+        .health-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--primary-color);
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        .metric-label {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+        }
+
+        /* ========== НАСТРОЙКИ ДОСТУПНОСТИ ========== */
+        body.high-contrast {
+            background: black !important;
+            color: white !important;
+        }
+        body.high-contrast .card,
+        body.high-contrast .btn,
+        body.high-contrast .tab-btn {
+            background-color: #333 !important;
+            color: white !important;
+            border-color: yellow !important;
+        }
+        body.large-text {
+            font-size: 24px !important;
+        }
+        body.large-text .btn {
+            font-size: 24px !important;
+            padding: 20px 40px !important;
+        }
+        body.dyslexia-friendly * {
+            font-family: 'OpenDyslexic', Arial, sans-serif !important;
+        }
+
+        /* ========== УЛУЧШЕННАЯ МОБИЛЬНАЯ ВЕРСИЯ ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 0;
+                border-radius: 15px;
+                margin-bottom: 80px; /* место для нижней панели */
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .status-bar {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .status-item {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            
+            /* Нижняя панель навигации (вместо левой) */
+            .quick-access {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                transform: none;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-radius: 20px 20px 0 0;
+                padding: 10px;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+                z-index: 9999;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+                border: none;
+                border-top: 2px solid var(--primary-color);
+            }
+            
+            .quick-access-btn {
+                width: 50px !important;
+                height: 50px !important;
+                margin: 0 !important;
+                font-size: 20px !important;
+            }
+            
+            /* Убираем лишний скролл у табов */
+            .tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding-bottom: 0;
+            }
+            
+            .tab-btn {
+                padding: 12px 15px;
+                font-size: 14px;
+                flex: 0 0 auto;
+                min-width: auto;
+            }
+            
+            .tab-content {
+                padding: 15px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+            
+            /* Кнопки в колонку на мобильных */
+            .btn-group {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .btn, .btn-primary, .btn-success, .btn-danger, .btn-warning {
+                width: 100%;
+                margin: 0;
+                padding: 16px 20px;
+                font-size: 16px;
+                min-height: 50px; /* увеличиваем для удобного тапа */
+            }
+            
+            .btn-lg {
+                padding: 18px 24px;
+                font-size: 18px;
+            }
+            
+            .lamp-control-panel {
+                padding: 15px;
+            }
+            
+            .lamp-icon {
+                font-size: 60px !important;
+            }
+            
+            .lamp-status {
+                font-size: 1.2rem !important;
+                padding: 10px !important;
+            }
+            
+            /* AI помощник на мобильных */
+            #aiChatContainer {
+                width: 94%;
+                height: 70vh;
+                bottom: 90px;
+                right: 3%;
+                left: 3%;
+                border-width: 2px;
+            }
+            
+            #aiLauncherBtn {
+                width: 60px;
+                height: 60px;
+                bottom: 80px;
+                right: 15px;
+                font-size: 28px;
+            }
+            
+            /* Лог */
+            .log-container {
+                height: 200px;
+                font-size: 12px;
+            }
+            
+            /* Медицинские метрики */
+            .health-metrics {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .metric-value {
+                font-size: 2rem;
+            }
+            
+            /* Устройства */
+            .device-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .device-item button {
+                width: 100%;
+            }
+            
+            /* Текст */
+            h2 { font-size: 1.4rem; }
+            h3 { font-size: 1.2rem; }
+            h4 { font-size: 1.1rem; }
+            
+            /* Настройки доступности */
+            .accessibility-panel .btn-group {
+                flex-direction: column;
+            }
+            
+            /* Убираем hover-эффекты на мобильных (они мешают) */
+            .btn:hover {
+                transform: none !important;
+            }
+            
+            .card:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Для совсем маленьких экранов (до 400px) */
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .tab-btn {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+            
+            .btn {
+                padding: 14px 16px;
+                font-size: 15px;
+            }
+            
+            .status-item {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+            
+            .quick-access-btn {
+                width: 44px !important;
+                height: 44px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Быстрый доступ -->
+    <div class="quick-access">
+        <button class="quick-access-btn" onclick="openTab('lamp')" title="Управление лампой" style="background:#3498db;" aria-label="Управление лампой">
+            <i class="fas fa-lightbulb"></i>
+        </button>
+        <button class="quick-access-btn" onclick="openTab('emergency')" title="Экстренная помощь" style="background:#e74c3c;" aria-label="Экстренная помощь">
+            <i class="fas fa-first-aid"></i>
+        </button>
+        <button class="quick-access-btn" onclick="openTab('voice')" title="Голосовое управление" style="background:#2ecc71;" aria-label="Голосовое управление">
+            <i class="fas fa-microphone"></i>
+        </button>
+        <button class="quick-access-btn" onclick="activateSOS()" title="SOS" style="background:#e74c3c; animation:sosPulse 1.5s infinite;" aria-label="Экстренная кнопка SOS">
+            <i class="fas fa-sos"></i>
+        </button>
+    </div>
+
+    <!-- Голосовая обратная связь -->
+    <div class="voice-feedback" id="voiceFeedback" style="display: none;" aria-live="polite">
+        <div class="voice-animation"></div>
+        <div id="voiceText">Слушаю вашу команду...</div>
+    </div>
+
+    <!-- Уведомления -->
+    <div id="notificationArea" aria-live="assertive"></div>
+
+    <div class="container">
+        <!-- Шапка -->
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1><i class="fas fa-home" aria-hidden="true"></i> Умный дом для людей с ОВЗ</h1>
+                    <p>Управление через голос, жесты и альтернативные методы ввода</p>
+                </div>
+                <div class="status-bar">
+                    <div class="status-item" id="connectionStatus">
+                        <i class="fas fa-wifi" aria-hidden="true"></i> <span>Подключение...</span>
+                    </div>
+                    <div class="status-item" id="lampStatusHeader">
+                        <i class="fas fa-lightbulb" aria-hidden="true"></i> <span>Лампа: проверка...</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-clock" aria-hidden="true"></i> <span id="currentTime">00:00</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Вкладки -->
+        <div class="tabs" role="tablist">
+            <button class="tab-btn active" onclick="openTab('lamp')" id="tabLamp" role="tab" aria-selected="true" aria-controls="tabLampContent">
+                <i class="fas fa-lightbulb" aria-hidden="true"></i> Лампа <span class="badge" id="lampBadge">●</span>
+            </button>
+            <button class="tab-btn" onclick="openTab('accessibility')" id="tabAccessibility" role="tab" aria-selected="false" aria-controls="tabAccessibilityContent">
+                <i class="fas fa-universal-access" aria-hidden="true"></i> Доступность
+            </button>
+            <button class="tab-btn" onclick="openTab('emergency')" id="tabEmergency" role="tab" aria-selected="false" aria-controls="tabEmergencyContent">
+                <i class="fas fa-first-aid" aria-hidden="true"></i> Экстренная <span class="badge">SOS</span>
+            </button>
+            <button class="tab-btn" onclick="openTab('voice')" id="tabVoice" role="tab" aria-selected="false" aria-controls="tabVoiceContent">
+                <i class="fas fa-microphone" aria-hidden="true"></i> Голос
+            </button>
+            <button class="tab-btn" onclick="openTab('devices')" id="tabDevices" role="tab" aria-selected="false" aria-controls="tabDevicesContent">
+                <i class="fas fa-plug" aria-hidden="true"></i> Устройства
+            </button>
+            <button class="tab-btn" onclick="openTab('monitoring')" id="tabMonitoring" role="tab" aria-selected="false" aria-controls="tabMonitoringContent">
+                <i class="fas fa-heartbeat" aria-hidden="true"></i> Мониторинг
+            </button>
+            <button class="tab-btn" onclick="openTab('log')" id="tabLog" role="tab" aria-selected="false" aria-controls="tabLogContent">
+                <i class="fas fa-history" aria-hidden="true"></i> Лог <span class="badge" id="logBadge">0</span>
+            </button>
+        </div>
+
+        <!-- Вкладка Лампа -->
+        <div id="tabLampContent" class="tab-content active" role="tabpanel" aria-labelledby="tabLamp">
+            <div class="lamp-control-panel" style="background: linear-gradient(135deg, #e8f5e9, #f1f8e9); padding:30px; border-radius:20px; border:4px solid #2ecc71; text-align:center;">
+                <div class="lamp-icon" id="lampIcon" style="font-size:80px; margin-bottom:20px; transition:all 0.3s; color:#95a5a6;">
+                    <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                </div>
+                <h2 style="color:#2c3e50;">Управление умной лампой</h2>
+                <p style="color:#666; margin-bottom:20px;">ID: 32f6a791-bba6-4d56-8dbf-a7be00fab417</p>
+                <div class="lamp-status" id="lampStatusText" style="font-size:1.5rem; font-weight:bold; margin:20px 0; padding:15px; border-radius:15px; background:white; color:#e74c3c;">
+                    <i class="fas fa-times-circle" aria-hidden="true"></i> Лампа ВЫКЛЮЧЕНА
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-success btn-lg" onclick="controlLamp('on')" id="btnLampOn">
+                        <i class="fas fa-power-off" aria-hidden="true"></i> Включить лампу
+                    </button>
+                    <button class="btn btn-danger btn-lg" onclick="controlLamp('off')" id="btnLampOff">
+                        <i class="fas fa-power-off" aria-hidden="true"></i> Выключить лампу
+                    </button>
+                    <button class="btn btn-primary btn-lg" onclick="controlLamp('toggle')">
+                        <i class="fas fa-sync" aria-hidden="true"></i> Переключить
+                    </button>
+                </div>
+                <div style="margin-top:30px;">
+                    <button class="btn btn-warning" onclick="testLampConnection()">
+                        <i class="fas fa-network-wired" aria-hidden="true"></i> Проверить соединение
+                    </button>
+                    <button class="btn" onclick="getLampInfo()" style="background:#9b59b6; color:white;">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i> Информация о лампе
+                    </button>
+                </div>
+                <div id="lampInfo" style="margin-top:20px; padding:20px; background:white; border-radius:10px; display:none;">
+                    <h3><i class="fas fa-info-circle" aria-hidden="true"></i> Информация о лампе</h3>
+                    <div id="lampInfoContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка Доступность -->
+        <div id="tabAccessibilityContent" class="tab-content" role="tabpanel" aria-labelledby="tabAccessibility">
+            <div class="accessibility-panel" style="background: linear-gradient(135deg, #e3f2fd, #f3e5f5); padding:25px; border-radius:15px; border:3px solid #3498db;">
+                <h2><i class="fas fa-universal-access" aria-hidden="true"></i> Настройки доступности</h2>
+                <p>Адаптируйте интерфейс под свои потребности</p>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title"><i class="fas fa-text-height"></i> Визуальные настройки</h3></div>
+                        <div class="btn-group">
+                            <button class="btn" onclick="toggleHighContrast()" id="btnContrast"><i class="fas fa-adjust"></i> Высокая контрастность</button>
+                            <button class="btn" onclick="toggleLargeText()" id="btnTextSize"><i class="fas fa-search-plus"></i> Крупный текст</button>
+                            <button class="btn" onclick="toggleDyslexiaFont()" id="btnDyslexia"><i class="fas fa-font"></i> Шрифт для дислексии</button>
+                            <button class="btn" onclick="reduceMotion()"><i class="fas fa-running"></i> Уменьшить анимацию</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title"><i class="fas fa-volume-up"></i> Звуковые настройки</h3></div>
+                        <div class="btn-group">
+                            <button class="btn" onclick="toggleSoundFeedback()" id="btnSound"><i class="fas fa-bell"></i> Звуковая обратная связь</button>
+                            <button class="btn" onclick="toggleVoiceNavigation()"><i class="fas fa-road"></i> Голосовая навигация</button>
+                            <button class="btn" onclick="screenReader()"><i class="fas fa-blind"></i> Экранный диктор</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:30px;">
+                    <h3><i class="fas fa-sliders-h"></i> Дополнительные настройки</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-success" onclick="saveAccessibilitySettings()"><i class="fas fa-save"></i> Сохранить настройки</button>
+                        <button class="btn" onclick="resetAccessibilitySettings()"><i class="fas fa-undo"></i> Сбросить настройки</button>
+                        <button class="btn" onclick="exportSettings()"><i class="fas fa-download"></i> Экспорт настроек</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка Экстренная помощь -->
+        <div id="tabEmergencyContent" class="tab-content" role="tabpanel" aria-labelledby="tabEmergency">
+            <div class="emergency-panel">
+                <h2><i class="fas fa-first-aid" aria-hidden="true"></i> Экстренная помощь</h2>
+                <p style="margin-bottom:30px;">Нажмите кнопку SOS в случае опасности</p>
+                <button class="btn btn-danger btn-lg sos-button" onclick="activateEmergencySOS()" aria-label="Экстренная кнопка SOS">
+                    <i class="fas fa-sos" aria-hidden="true"></i> КНОПКА SOS
+                </button>
+                <div style="margin-top:40px;">
+                    <h3><i class="fas fa-phone-alt"></i> Быстрый вызов</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4><i class="fas fa-ambulance"></i> Скорая помощь</h4>
+                            <button class="btn btn-danger btn-block" onclick="callAmbulance()">Вызвать скорую</button>
+                        </div>
+                        <div class="card">
+                            <h4><i class="fas fa-user-md"></i> Дежурный врач</h4>
+                            <button class="btn btn-warning btn-block" onclick="callDoctor()">Вызвать врача</button>
+                        </div>
+                        <div class="card">
+                            <h4><i class="fas fa-users"></i> Родственники</h4>
+                            <button class="btn btn-primary btn-block" onclick="callRelative()">Позвонить родным</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:30px;">
+                    <h3><i class="fas fa-history"></i> История вызовов</h3>
+                    <div id="emergencyHistory" class="log-container" style="height:200px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка Голосовое управление -->
+        <div id="tabVoiceContent" class="tab-content" role="tabpanel" aria-labelledby="tabVoice">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-microphone"></i> Голосовое управление</h3>
+                    <div class="indicator" id="voiceStatusIndicator"><i class="fas fa-microphone-slash"></i> Не активно</div>
+                </div>
+                <div style="text-align:center; padding:30px;">
+                    <div class="voice-animation" style="width:100px; height:100px; margin:0 auto 30px;"></div>
+                    <button class="btn btn-success btn-lg" onclick="startVoiceControl()" id="btnStartVoice"><i class="fas fa-microphone"></i> Начать голосовое управление</button>
+                    <button class="btn btn-danger" onclick="stopVoiceControl()" id="btnStopVoice" style="display:none;"><i class="fas fa-stop-circle"></i> Остановить</button>
+                </div>
+                <div style="margin-top:30px;">
+                    <h4><i class="fas fa-list"></i> Доступные команды</h4>
+                    <div class="cards-grid">
+                        <div class="card"><h5>💡 Лампы</h5> "Включи свет", "Выключи свет", "Включи чайник", "Выключи чайник"</div>
+                        <div class="card"><h5>🧹 Пылесос</h5> "Включи пылесос", "Выключи пылесос", "Пылесос на базу"</div>
+                        <div class="card"><h5>🆘 Экстренные</h5> "Помощь", "Вызови врача", "Вызови скорую"</div>
+                    </div>
+                </div>
+                <div style="margin-top:30px;">
+                    <h4><i class="fas fa-comment-dots"></i> Распознанная речь</h4>
+                    <div id="voiceOutput" style="padding:20px; background:#f8f9fa; border-radius:10px; min-height:100px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка Устройства (переименовано: Лампа, Чайник, Пылесос) -->
+        <div id="tabDevicesContent" class="tab-content" role="tabpanel" aria-labelledby="tabDevices">
+            <h2 style="margin-bottom:20px;"><i class="fas fa-plug"></i> Управление устройствами</h2>
+            <!-- Лампа -->
+            <div class="card" style="margin-bottom:20px;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-lightbulb"></i> Лампа</h3>
+                    <span class="badge" id="yandexLampStatusBadge" title="Статус устройства"></span>
+                </div>
+                <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                    <button class="btn btn-success" onclick="controlDevice('yandexLamp', 'on')" id="yandexLampOnBtn">✅ Включить</button>
+                    <button class="btn btn-danger" onclick="controlDevice('yandexLamp', 'off')" id="yandexLampOffBtn">❌ Выключить</button>
+                    <button class="btn btn-primary" onclick="controlDevice('yandexLamp', 'toggle')">🔄 Переключить</button>
+                </div>
+                <div style="margin-top:15px; font-size:14px; color:#666;">ID: <code>32f6a791-bba6-4d56-8dbf-a7be00fab417</code></div>
+            </div>
+            <!-- Чайник (бывшая Лампочка Глеб) -->
+            <div class="card" style="margin-bottom:20px;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-mug-hot"></i> Чайник</h3>
+                    <span class="badge" id="glebLampStatusBadge" title="Статус устройства"></span>
+                </div>
+                <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                    <button class="btn btn-success" onclick="controlDevice('glebLamp', 'on')" id="glebLampOnBtn">✅ Включить</button>
+                    <button class="btn btn-danger" onclick="controlDevice('glebLamp', 'off')" id="glebLampOffBtn">❌ Выключить</button>
+                    <button class="btn btn-primary" onclick="controlDevice('glebLamp', 'toggle')">🔄 Переключить</button>
+                </div>
+                <div style="margin-top:15px; font-size:14px; color:#666;">ID: <code>306ba9d7-5f63-434c-b12e-1bf9bdc7bbf7</code></div>
+            </div>
+            <!-- Пылесос -->
+            <div class="card" style="margin-bottom:20px;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-robot"></i> Пылесос</h3>
+                    <span class="badge" id="vacuumStatusBadge" title="Статус устройства"></span>
+                </div>
+                <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                    <button class="btn btn-success" onclick="controlDevice('vacuum', 'on')" id="vacuumOnBtn">▶️ Запустить</button>
+                    <button class="btn btn-danger" onclick="controlDevice('vacuum', 'off')" id="vacuumOffBtn">⏹️ Остановить</button>
+                    <button class="btn btn-warning" onclick="controlDevice('vacuum', 'dock')">🏠 На базу</button>
+                </div>
+                <div style="margin-top:15px; font-size:14px; color:#666;">ID: <code>6e093be5-e7c7-47d6-ad08-ce7f0221cb2e</code></div>
+            </div>
+        </div>
+
+        <!-- Вкладка Медицинский мониторинг (теперь с наполнением) -->
+        <div id="tabMonitoringContent" class="tab-content" role="tabpanel" aria-labelledby="tabMonitoring">
+            <h2 style="margin-bottom:20px;"><i class="fas fa-heartbeat"></i> Медицинский мониторинг</h2>
+            <div class="health-metrics">
+                <div class="metric-card">
+                    <i class="fas fa-heart" style="font-size: 2rem; color: #e74c3c;"></i>
+                    <div class="metric-value" id="heartRateDisplay">72</div>
+                    <div class="metric-label">Пульс (уд/мин)</div>
+                </div>
+                <div class="metric-card">
+                    <i class="fas fa-lungs" style="font-size: 2rem; color: #3498db;"></i>
+                    <div class="metric-value" id="oxygenDisplay">98</div>
+                    <div class="metric-label">Сатурация (%)</div>
+                </div>
+                <div class="metric-card">
+                    <i class="fas fa-pressure" style="font-size: 2rem; color: #f39c12;"></i>
+                    <div class="metric-value" id="pressureDisplay">120/80</div>
+                    <div class="metric-label">Давление</div>
+                </div>
+            </div>
+            <div class="card" style="margin-top:20px;">
+                <h3><i class="fas fa-history"></i> Последние измерения</h3>
+                <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
+                    <div><i class="fas fa-clock"></i> 10:30 — Пульс 72, Сатурация 98%</div>
+                    <div><i class="fas fa-clock"></i> 09:15 — Пульс 74, Сатурация 97%</div>
+                    <div><i class="fas fa-clock"></i> 08:00 — Пульс 68, Сатурация 99%</div>
+                </div>
+                <button class="btn btn-primary" onclick="checkVitals()" style="margin-top:20px; width:100%;">
+                    <i class="fas fa-sync-alt"></i> Обновить показатели
+                </button>
+            </div>
+        </div>
+
+        <!-- Вкладка Лог событий -->
+        <div id="tabLogContent" class="tab-content" role="tabpanel" aria-labelledby="tabLog">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-history"></i> Лог событий системы</h3>
+                    <div class="btn-group" style="flex-direction: row; flex-wrap: wrap;">
+                        <button class="btn" onclick="clearLog()"><i class="fas fa-trash"></i> Очистить</button>
+                        <button class="btn" onclick="exportLog()"><i class="fas fa-download"></i> Экспорт</button>
+                        <button class="btn" onclick="toggleAutoScroll()" id="btnAutoScroll"><i class="fas fa-arrow-down"></i> Авто</button>
+                    </div>
+                </div>
+                <div class="log-container" id="systemLog" aria-live="polite"></div>
+                <div style="margin-top:20px;">
+                    <h4><i class="fas fa-filter"></i> Фильтр</h4>
+                    <div class="btn-group" style="flex-direction: row; flex-wrap: wrap;">
+                        <button class="btn active" onclick="filterLog('all')">Все</button>
+                        <button class="btn" onclick="filterLog('success')">Успех</button>
+                        <button class="btn" onclick="filterLog('error')">Ошибки</button>
+                        <button class="btn" onclick="filterLog('voice')">Голос</button>
+                        <button class="btn" onclick="filterLog('emergency')">Экстренные</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Помощник - Кнопка запуска -->
+    <button id="aiLauncherBtn" onclick="toggleAIChat()" aria-label="Открыть AI помощника">🤖</button>
+
+    <!-- AI Помощник - Окно чата -->
+    <div id="aiChatContainer">
+        <div id="aiChatHeader">
+            <span><i class="fas fa-robot"></i> AI Помощник</span>
+            <button onclick="toggleAIChat()" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">✕</button>
+        </div>
+        <div id="aiChatMessages">
+            <div class="ai-message">Здравствуйте! Я ваш AI-помощник. Чем могу помочь?</div>
+        </div>
+        <div id="aiInputArea">
+            <input type="text" id="aiInput" placeholder="Введите сообщение..." onkeypress="if(event.key==='Enter') sendAIMessage()">
+            <button id="aiSendBtn" onclick="sendAIMessage()">Отправить</button>
+        </div>
+    </div>
+
+    <!-- ==================== ПОЛНЫЙ JAVASCRIPT ==================== -->
+    <script>
+        // ------------------------------------------------------------
+        //  ГЛОБАЛЬНЫЕ КОНСТАНТЫ И ПЕРЕМЕННЫЕ
+        // ------------------------------------------------------------
+        // Эмуляция API (без 404 ошибок)
+        const LAMP_API = '';
+        const GLEB_API = '';
+        const VACUUM_API = '';
+
+        const LAMP_ID = '32f6a791-bba6-4d56-8dbf-a7be00fab417';
+        const GLEB_ID = '306ba9d7-5f63-434c-b12e-1bf9bdc7bbf7';
+        const VACUUM_ID = '6e093be5-e7c7-47d6-ad08-ce7f0221cb2e';
+
+        let deviceStates = {
+            yandexLamp: { isOn: false },
+            glebLamp: { isOn: false },
+            vacuum: { isOn: false }
+        };
+
+        let voiceRecognition = null;
+        let isListening = false;
+        let logEntries = [];
+        let autoScroll = true;
+        let accessibilitySettings = {
+            highContrast: false,
+            largeText: false,
+            dyslexiaFont: false,
+            soundFeedback: true,
+            reducedMotion: false
+        };
+
+        // ------------------------------------------------------------
+        //  УПРАВЛЕНИЕ ВКЛАДКАМИ
+        // ------------------------------------------------------------
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
+            const contentId = `tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}Content`;
+            const tabId = `tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
+            document.getElementById(contentId)?.classList.add('active');
+            document.getElementById(tabId)?.classList.add('active');
+            document.getElementById(tabId)?.setAttribute('aria-selected', 'true');
+            logEvent(`📂 Открыта вкладка: ${tabName}`, 'system');
+        }
+
+        // ------------------------------------------------------------
+        //  УПРАВЛЕНИЕ УСТРОЙСТВАМИ (ЭМУЛЯЦИЯ)
+        // ------------------------------------------------------------
+        async function controlDevice(deviceKey, action) {
+            logEvent(`🎯 ${deviceKey}: ${action}`, 'system');
+            
+            // Эмулируем успешный ответ
+            setTimeout(() => {
+                if (deviceKey === 'vacuum') {
+                    if (action === 'on') deviceStates.vacuum.isOn = true;
+                    else if (action === 'off' || action === 'dock') deviceStates.vacuum.isOn = false;
+                } else {
+                    if (action === 'on') deviceStates[deviceKey].isOn = true;
+                    else if (action === 'off') deviceStates[deviceKey].isOn = false;
+                    else if (action === 'toggle') deviceStates[deviceKey].isOn = !deviceStates[deviceKey].isOn;
+                }
+                updateDeviceUI(deviceKey);
+                updateDeviceBadge(deviceKey, deviceStates[deviceKey]?.isOn ?? false);
+                showNotification(`✅ ${getDeviceName(deviceKey)} – ${action === 'on' ? 'включен' : action === 'off' ? 'выключен' : 'переключен'}`, 'success');
+                logEvent(`✅ ${deviceKey} – ${action}`, 'success');
+                
+                // Если это лампа, обновляем и старую вкладку
+                if (deviceKey === 'yandexLamp') {
+                    updateLampUI(deviceStates.yandexLamp);
+                    updateLampHeader(deviceStates.yandexLamp);
+                }
+            }, 300);
+        }
+        
+        function getDeviceName(deviceKey) {
+            const names = {
+                yandexLamp: 'Лампа',
+                glebLamp: 'Чайник',
+                vacuum: 'Пылесос'
+            };
+            return names[deviceKey] || deviceKey;
+        }
+
+        function updateDeviceUI(deviceKey) {
+            if (deviceKey === 'yandexLamp' || deviceKey === 'glebLamp') {
+                const onBtn = document.getElementById(`${deviceKey}OnBtn`);
+                const offBtn = document.getElementById(`${deviceKey}OffBtn`);
+                if (onBtn && offBtn) {
+                    onBtn.disabled = deviceStates[deviceKey].isOn;
+                    offBtn.disabled = !deviceStates[deviceKey].isOn;
+                }
+            } else if (deviceKey === 'vacuum') {
+                const onBtn = document.getElementById('vacuumOnBtn');
+                const offBtn = document.getElementById('vacuumOffBtn');
+                if (onBtn && offBtn) {
+                    onBtn.disabled = deviceStates.vacuum.isOn;
+                    offBtn.disabled = !deviceStates.vacuum.isOn;
+                }
+            }
+        }
+
+        function updateDeviceBadge(deviceKey, isOn) {
+            const badge = document.getElementById(`${deviceKey}StatusBadge`);
+            if (badge) {
+                badge.className = `badge ${isOn ? 'online' : 'offline'}`;
+                badge.title = isOn ? 'Включено' : 'Выключено';
+            }
+        }
+
+        // ------------------------------------------------------------
+        //  УПРАВЛЕНИЕ ЛАМПОЙ
+        // ------------------------------------------------------------
+        async function controlLamp(action) {
+            controlDevice('yandexLamp', action);
+        }
+
+        function updateLampUI(state) {
+            const isOn = state.isOn;
+            const lampIcon = document.getElementById('lampIcon');
+            const statusText = document.getElementById('lampStatusText');
+            const btnOn = document.getElementById('btnLampOn');
+            const btnOff = document.getElementById('btnLampOff');
+            if (isOn) {
+                lampIcon.style.color = '#f1c40f';
+                statusText.innerHTML = '<i class="fas fa-check-circle"></i> Лампа ВКЛЮЧЕНА';
+                statusText.style.color = '#27ae60';
+                btnOn.disabled = true;
+                btnOff.disabled = false;
+            } else {
+                lampIcon.style.color = '#95a5a6';
+                statusText.innerHTML = '<i class="fas fa-times-circle"></i> Лампа ВЫКЛЮЧЕНА';
+                statusText.style.color = '#e74c3c';
+                btnOn.disabled = false;
+                btnOff.disabled = true;
+            }
+        }
+
+        function updateLampHeader(state) {
+            const isOn = state.isOn;
+            const header = document.getElementById('lampStatusHeader');
+            const badge = document.getElementById('lampBadge');
+            if (isOn) {
+                header.innerHTML = '<i class="fas fa-lightbulb"></i> <span>Лампа: ВКЛ</span>';
+                header.style.background = 'rgba(46,204,113,0.3)';
+                badge.style.color = '#2ecc71';
+            } else {
+                header.innerHTML = '<i class="fas fa-lightbulb"></i> <span>Лампа: ВЫКЛ</span>';
+                header.style.background = 'rgba(231,76,60,0.3)';
+                badge.style.color = '#e74c3c';
+            }
+        }
+
+        // Заглушки для функций, чтобы не было 404
+        async function testLampConnection() {
+            showNotification('✅ Соединение с лампой установлено (эмуляция)', 'success');
+        }
+
+        async function getLampInfo() {
+            const div = document.getElementById('lampInfo');
+            div.style.display = 'block';
+            document.getElementById('lampInfoContent').innerHTML = `<p><strong>Название:</strong> Лампа</p><p><strong>Тип:</strong> Умная лампа</p><p><strong>Статус:</strong> ✅ Онлайн</p>`;
+        }
+
+        // ------------------------------------------------------------
+        //  ДОСТУПНОСТЬ
+        // ------------------------------------------------------------
+        function loadSettings() {
+            const saved = localStorage.getItem('accessibilitySettings');
+            if (saved) { accessibilitySettings = JSON.parse(saved); applySettings(); }
+        }
+        function saveSettings() {
+            localStorage.setItem('accessibilitySettings', JSON.stringify(accessibilitySettings));
+            showNotification('Настройки сохранены', 'success');
+        }
+        function applySettings() {
+            document.body.classList.toggle('high-contrast', accessibilitySettings.highContrast);
+            document.getElementById('btnContrast').innerHTML = accessibilitySettings.highContrast ? '<i class="fas fa-adjust"></i> Обычный режим' : '<i class="fas fa-adjust"></i> Высокая контрастность';
+            document.body.classList.toggle('large-text', accessibilitySettings.largeText);
+            document.getElementById('btnTextSize').innerHTML = accessibilitySettings.largeText ? '<i class="fas fa-search-minus"></i> Обычный текст' : '<i class="fas fa-search-plus"></i> Крупный текст';
+            document.body.classList.toggle('dyslexia-friendly', accessibilitySettings.dyslexiaFont);
+            document.getElementById('btnDyslexia').innerHTML = accessibilitySettings.dyslexiaFont ? '<i class="fas fa-font"></i> Обычный шрифт' : '<i class="fas fa-font"></i> Шрифт для дислексии';
+            if (accessibilitySettings.reducedMotion) document.documentElement.style.setProperty('--transition', 'none');
+            else document.documentElement.style.setProperty('--transition', 'all 0.3s ease');
+        }
+        function toggleHighContrast() { accessibilitySettings.highContrast = !accessibilitySettings.highContrast; applySettings(); saveSettings(); logEvent(`Контрастность: ${accessibilitySettings.highContrast ? 'высокая' : 'обычная'}`, 'system'); }
+        function toggleLargeText() { accessibilitySettings.largeText = !accessibilitySettings.largeText; applySettings(); saveSettings(); logEvent(`Текст: ${accessibilitySettings.largeText ? 'крупный' : 'обычный'}`, 'system'); }
+        function toggleDyslexiaFont() { accessibilitySettings.dyslexiaFont = !accessibilitySettings.dyslexiaFont; applySettings(); saveSettings(); logEvent(`Шрифт: ${accessibilitySettings.dyslexiaFont ? 'для дислексии' : 'обычный'}`, 'system'); }
+        function reduceMotion() { accessibilitySettings.reducedMotion = !accessibilitySettings.reducedMotion; applySettings(); saveSettings(); logEvent(`Анимация: ${accessibilitySettings.reducedMotion ? 'уменьшена' : 'обычная'}`, 'system'); }
+        function toggleSoundFeedback() { 
+            accessibilitySettings.soundFeedback = !accessibilitySettings.soundFeedback; 
+            document.getElementById('btnSound').innerHTML = accessibilitySettings.soundFeedback ? '<i class="fas fa-bell"></i> Звук вкл' : '<i class="fas fa-bell-slash"></i> Звук выкл';
+            saveSettings(); 
+        }
+        function toggleVoiceNavigation() { showNotification('Голосовая навигация активирована', 'info'); startVoiceControl(); }
+        function screenReader() { 
+            document.querySelectorAll('button, a, input').forEach(el => { if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', el.textContent || el.placeholder || el.value); });
+            showNotification('Экранный диктор активирован', 'info'); 
+        }
+        function enableKeyboardNavigation() { 
+            document.querySelectorAll('.btn, .tab-btn, .card').forEach(el => el.setAttribute('tabindex', '0')); 
+            showNotification('Управление с клавиатуры активировано', 'info'); 
+        }
+        function enableHeadTracking() { showNotification('Управление головой (имитация)', 'info'); }
+        function enableEyeTracking() { showNotification('Управление взглядом (имитация)', 'info'); }
+        function saveAccessibilitySettings() { saveSettings(); }
+        function resetAccessibilitySettings() {
+            accessibilitySettings = { highContrast: false, largeText: false, dyslexiaFont: false, soundFeedback: true, reducedMotion: false };
+            applySettings(); saveSettings(); showNotification('Настройки сброшены', 'info');
+        }
+        function exportSettings() {
+            const dataStr = JSON.stringify(accessibilitySettings, null, 2);
+            const link = document.createElement('a');
+            link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            link.download = 'умный-дом-настройки.json';
+            link.click();
+            showNotification('Настройки экспортированы', 'success');
+        }
+
+        // ------------------------------------------------------------
+        //  ЭКСТРЕННЫЕ ФУНКЦИИ
+        // ------------------------------------------------------------
+        function activateEmergencySOS() {
+            logEvent('🚨 SOS АКТИВИРОВАН!', 'emergency');
+            showNotification('SOS! Вызываю помощь...', 'error');
+            if (accessibilitySettings.soundFeedback) playEmergencySound();
+            setTimeout(() => callAmbulance(), 1000);
+            setTimeout(() => callRelative(), 2000);
+            addEmergencyHistory('🚑 Скорая помощь вызвана');
+        }
+        function activateSOS() { if (confirm('Активировать SOS?')) activateEmergencySOS(); }
+        function callAmbulance() { logEvent('🚑 Вызов скорой', 'emergency'); showNotification('Скорая вызвана', 'error'); addEmergencyHistory('🚑 Скорая помощь'); }
+        function callDoctor() { logEvent('👨‍⚕️ Вызов врача', 'emergency'); showNotification('Врач вызван', 'info'); addEmergencyHistory('👨‍⚕️ Дежурный врач'); }
+        function callRelative() { logEvent('👨‍👩‍👧‍👦 Вызов родственника', 'emergency'); showNotification('Звонок родственнику', 'info'); addEmergencyHistory('👨‍👩‍👧‍👦 Родственник'); }
+        function playEmergencySound() { 
+            try { new Audio('https://assets.mixkit.co/sfx/preview/mixkit-emergency-alarm-siren-loop-1007.mp3').play(); } catch(e){} 
+        }
+        function addEmergencyHistory(msg) {
+            const div = document.getElementById('emergencyHistory');
+            if (!div) return;
+            const time = new Date().toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = `[${time}] ${msg}`;
+            div.appendChild(entry);
+            div.scrollTop = div.scrollHeight;
+        }
+
+        // ------------------------------------------------------------
+        //  ГОЛОСОВОЕ УПРАВЛЕНИЕ
+        // ------------------------------------------------------------
+        function initVoiceRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { 
+                document.getElementById('btnStartVoice').disabled = true; 
+                document.getElementById('btnStartVoice').innerHTML = '<i class="fas fa-microphone-slash"></i> Голос не поддерживается';
+                return;
+            }
+            voiceRecognition = new SpeechRecognition();
+            voiceRecognition.lang = 'ru-RU';
+            voiceRecognition.continuous = true;
+            voiceRecognition.interimResults = true;
+            voiceRecognition.onstart = function() {
+                isListening = true;
+                document.getElementById('voiceFeedback').style.display = 'flex';
+                document.getElementById('voiceStatusIndicator').innerHTML = '<i class="fas fa-microphone"></i> Активно';
+                document.getElementById('btnStartVoice').style.display = 'none';
+                document.getElementById('btnStopVoice').style.display = 'inline-flex';
+                logEvent('🎤 Голосовое управление активировано', 'voice');
+            };
+            voiceRecognition.onresult = function(event) {
+                let final = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) final += event.results[i][0].transcript;
+                }
+                if (final) {
+                    document.getElementById('voiceOutput').textContent = final;
+                    document.getElementById('voiceText').textContent = final;
+                    processVoiceCommand(final);
+                }
+            };
+            voiceRecognition.onerror = function(e) { 
+                logEvent(`❌ Ошибка речи: ${e.error}`, 'error'); 
+                stopVoiceControl();
+            };
+            voiceRecognition.onend = function() {
+                if (isListening) voiceRecognition.start();
+                else {
+                    document.getElementById('voiceFeedback').style.display = 'none';
+                    document.getElementById('voiceStatusIndicator').innerHTML = '<i class="fas fa-microphone-slash"></i> Не активно';
+                }
+            };
+        }
+
+        function startVoiceControl() {
+            if (!voiceRecognition) { showNotification('Голос не поддерживается', 'error'); return; }
+            if (isListening) { stopVoiceControl(); return; }
+            try { voiceRecognition.start(); showNotification('Голосовое управление запущено', 'success'); } 
+            catch(e) { showNotification('Ошибка запуска', 'error'); }
+        }
+
+        function stopVoiceControl() {
+            isListening = false;
+            if (voiceRecognition) voiceRecognition.stop();
+            document.getElementById('btnStartVoice').style.display = 'inline-flex';
+            document.getElementById('btnStopVoice').style.display = 'none';
+            showNotification('Голосовое управление остановлено', 'info');
+        }
+
+        function processVoiceCommand(command) {
+            command = command.toLowerCase();
+            logEvent(`🎤 Команда: "${command}"`, 'voice');
+            if (command.includes('включи свет') || command.includes('включи лампу')) controlLamp('on');
+            else if (command.includes('выключи свет') || command.includes('выключи лампу')) controlLamp('off');
+            else if (command.includes('переключи свет')) controlLamp('toggle');
+            else if (command.includes('включи чайник')) controlDevice('glebLamp', 'on');
+            else if (command.includes('выключи чайник')) controlDevice('glebLamp', 'off');
+            else if (command.includes('включи пылесос')) controlDevice('vacuum', 'on');
+            else if (command.includes('выключи пылесос')) controlDevice('vacuum', 'off');
+            else if (command.includes('пылесос на базу')) controlDevice('vacuum', 'dock');
+            else if (command.includes('помощь') || command.includes('sos')) activateSOS();
+            else if (command.includes('вызови врача')) callDoctor();
+            else if (command.includes('вызови скорую')) callAmbulance();
+            else if (command.includes('открой устройства')) openTab('devices');
+            else if (command.includes('открой лог')) openTab('log');
+            else speakResponse('Не поняла команду');
+        }
+
+        function speakResponse(text) {
+            if (!accessibilitySettings.soundFeedback) return;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ru-RU';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // ------------------------------------------------------------
+        //  ЛОГ И УВЕДОМЛЕНИЯ
+        // ------------------------------------------------------------
+        function logEvent(message, type = 'system') {
+            const time = new Date().toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+            const logDiv = document.getElementById('systemLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.dataset.type = type;
+            const icons = { system:'🖥️', success:'✅', error:'❌', voice:'🎤', emergency:'🚨', lamp:'💡' };
+            entry.textContent = `[${time}] ${icons[type] || '📝'} ${message}`;
+            logDiv.appendChild(entry);
+            logEntries.push({time, message, type});
+            updateLogBadge();
+            if (autoScroll) logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateLogBadge() {
+            const badge = document.getElementById('logBadge');
+            if (badge) badge.textContent = logEntries.length;
+        }
+
+        function clearLog() {
+            document.getElementById('systemLog').innerHTML = '';
+            logEntries = [];
+            updateLogBadge();
+            logEvent('🗑️ Лог очищен', 'system');
+        }
+
+        function exportLog() {
+            const text = logEntries.map(e => `[${e.time}] ${e.message}`).join('\n');
+            const blob = new Blob([text], {type:'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `log-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            logEvent('📤 Экспорт лога', 'system');
+        }
+
+        function toggleAutoScroll() {
+            autoScroll = !autoScroll;
+            const btn = document.getElementById('btnAutoScroll');
+            btn.innerHTML = autoScroll ? '<i class="fas fa-arrow-down"></i> Авто' : '<i class="fas fa-arrow-down"></i> Авто';
+        }
+
+        function filterLog(type) {
+            const entries = document.querySelectorAll('.log-entry');
+            entries.forEach(e => e.style.display = (type === 'all' || e.dataset.type === type) ? 'block' : 'none');
+            document.querySelectorAll('.btn-group .btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            logEvent(`Фильтр: ${type}`, 'system');
+        }
+
+        function showNotification(message, type = 'info') {
+            const area = document.getElementById('notificationArea');
+            const notif = document.createElement('div');
+            notif.className = `notification notification-${type}`;
+            notif.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i><span>${message}</span>`;
+            area.appendChild(notif);
+            setTimeout(() => {
+                notif.style.animation = 'slideInRight 0.5s ease reverse';
+                setTimeout(() => notif.remove(), 500);
+            }, 5000);
+        }
+
+        // ------------------------------------------------------------
+        //  AI ПОМОЩНИК
+        // ------------------------------------------------------------
+        function toggleAIChat() {
+            const chat = document.getElementById('aiChatContainer');
+            if (chat.style.display === 'none' || chat.style.display === '') {
+                chat.style.display = 'flex';
+                logEvent('🤖 AI помощник открыт', 'system');
+            } else {
+                chat.style.display = 'none';
+            }
+        }
+
+        function sendAIMessage() {
+            const input = document.getElementById('aiInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const messagesDiv = document.getElementById('aiChatMessages');
+            
+            // Добавляем сообщение пользователя
+            const userMsg = document.createElement('div');
+            userMsg.className = 'user-message';
+            userMsg.textContent = message;
+            messagesDiv.appendChild(userMsg);
+            
+            // Очищаем input
+            input.value = '';
+            
+            // Простые ответы AI
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'ai-message';
+                
+                const lowerMsg = message.toLowerCase();
+                if (lowerMsg.includes('привет') || lowerMsg.includes('здравствуй')) {
+                    aiMsg.textContent = 'Здравствуйте! Чем могу помочь?';
+                } else if (lowerMsg.includes('лампа') || lowerMsg.includes('свет')) {
+                    aiMsg.textContent = 'Вы можете управлять лампой на вкладке "Лампа" или голосом. Скажите "включи свет"';
+                } else if (lowerMsg.includes('чайник')) {
+                    aiMsg.textContent = 'Чайником можно управлять на вкладке "Устройства" или голосом.';
+                } else if (lowerMsg.includes('пылесос')) {
+                    aiMsg.textContent = 'Пылесос можно запустить, остановить или отправить на базу.';
+                } else if (lowerMsg.includes('помощь') || lowerMsg.includes('sos')) {
+                    aiMsg.textContent = 'В экстренной ситуации нажмите красную кнопку SOS или скажите "помощь"';
+                } else if (lowerMsg.includes('спасибо')) {
+                    aiMsg.textContent = 'Пожалуйста! Обращайтесь :)';
+                } else {
+                    aiMsg.textContent = 'Извините, я ещё учусь. Попробуйте спросить про лампу, чайник, пылесос или помощь.';
+                }
+                
+                messagesDiv.appendChild(aiMsg);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 500);
+            
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // ------------------------------------------------------------
+        //  МЕДИЦИНСКИЙ МОНИТОРИНГ
+        // ------------------------------------------------------------
+        function checkVitals() {
+            // Эмуляция показателей
+            const heartRate = Math.floor(Math.random() * 40) + 60; // 60-100
+            const oxygen = Math.floor(Math.random() * 5) + 95; // 95-100
+            const systolic = Math.floor(Math.random() * 40) + 110; // 110-150
+            const diastolic = Math.floor(Math.random() * 20) + 70; // 70-90
+            
+            document.getElementById('heartRateDisplay').textContent = heartRate;
+            document.getElementById('oxygenDisplay').textContent = oxygen;
+            document.getElementById('pressureDisplay').textContent = `${systolic}/${diastolic}`;
+            
+            logEvent(`❤️ Пульс: ${heartRate}, Сатурация: ${oxygen}%, Давление: ${systolic}/${diastolic}`, 'system');
+            showNotification('Показатели здоровья обновлены', 'success');
+        }
+
+        // ------------------------------------------------------------
+        //  ИНИЦИАЛИЗАЦИЯ
+        // ------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', function() {
+            // Время
+            updateTime();
+            setInterval(updateTime, 1000);
+            function updateTime() {
+                document.getElementById('currentTime').textContent = new Date().toLocaleTimeString('ru-RU');
+            }
+
+            // Статус системы (эмуляция)
+            document.getElementById('connectionStatus').innerHTML = '<i class="fas fa-wifi"></i> <span>Подключено (эмуляция)</span>';
+
+            // Статус лампы
+            updateLampUI(deviceStates.yandexLamp);
+            updateLampHeader(deviceStates.yandexLamp);
+            
+            // Статус устройств
+            updateDeviceBadge('yandexLamp', false);
+            updateDeviceBadge('glebLamp', false);
+            updateDeviceBadge('vacuum', false);
+
+            // Настройки доступности
+            loadSettings();
+
+            // Голосовое
+            initVoiceRecognition();
+
+            // Лог
+            logEvent('🚀 Система запущена (эмуляция)', 'system');
+            logEvent('✅ Все модули инициализированы', 'success');
+            
+            // Несколько тестовых записей для лога
+            setTimeout(() => {
+                logEvent('💡 Лампа готова к работе', 'lamp');
+                logEvent('🔊 Голосовое управление доступно', 'voice');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
