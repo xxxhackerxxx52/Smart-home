@@ -693,3 +693,164 @@ body.large-text .btn-control {
         grid-template-columns: 1fr;
     }
 }
+/* ========== УЛУЧШЕНИЯ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ ========== */
+@media (max-width: 768px) {
+    /* Убираем фиксированную левую панель или делаем её менее навязчивой */
+    .quick-access {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        top: auto;
+        right: auto;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(5px);
+        border-radius: 50px;
+        padding: 8px 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        z-index: 1000;
+    }
+    .quick-access-btn {
+        width: 44px !important;
+        height: 44px !important;
+        margin: 0 !important;
+    }
+    
+    /* Основной контейнер */
+    .container {
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    /* Заголовок */
+    h1 {
+        font-size: 1.8rem;
+        flex-wrap: wrap;
+    }
+    
+    /* Строка статуса */
+    .status-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        width: 100%;
+    }
+    
+    /* Вкладки */
+    .tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .tab-btn {
+        padding: 12px 10px;
+        font-size: 14px;
+        flex: 1 1 auto;
+        min-width: 100px;
+    }
+    
+    /* Карточки */
+    .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .card {
+        padding: 15px;
+    }
+    
+    /* Кнопки внутри карточек */
+    .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .btn, .btn-primary, .btn-success, .btn-danger, .btn-warning {
+        width: 100%;
+        margin: 2px 0;
+        padding: 14px 20px;
+        font-size: 16px;
+        justify-content: center;
+    }
+    
+    /* Лампа (большая кнопка) */
+    .btn-lg {
+        padding: 16px 24px;
+        font-size: 18px;
+    }
+    
+    /* Панель лампы */
+    .lamp-control-panel {
+        padding: 20px;
+    }
+    
+    /* Голосовое управление */
+    .btn-voice {
+        width: 100%;
+        padding: 18px;
+        font-size: 18px;
+    }
+    
+    /* Экстренная панель */
+    .emergency-panel .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* AI-помощник (если есть) */
+    #aiLauncherBtn {
+        width: 60px;
+        height: 60px;
+        bottom: 90px; /* поднять над панелью быстрого доступа */
+        right: 15px;
+        font-size: 28px;
+    }
+    #aiChatContainer {
+        width: 90%;
+        height: 70vh;
+        bottom: 160px;
+        right: 5%;
+        left: 5%;
+    }
+    
+    /* Лог событий */
+    .log-container {
+        height: 200px;
+        font-size: 13px;
+    }
+    
+    /* Уведомления */
+    .notification {
+        width: 90%;
+        left: 5%;
+        right: 5%;
+        top: 10px;
+        font-size: 14px;
+    }
+    
+    /* Настройки доступности: кнопки в колонку */
+    .accessibility-panel .btn-group {
+        flex-direction: column;
+    }
+    
+    /* Таблицы и списки устройств */
+    .device-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .device-item button {
+        width: 100%;
+    }
+    
+    /* Уменьшаем отступы у текста */
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.3rem; }
+    
+    /* Корректировка для высокой контрастности */
+    body.high-contrast .btn,
+    body.high-contrast .tab-btn {
+        border-width: 2px;
+    }
+}
