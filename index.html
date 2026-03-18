@@ -339,6 +339,32 @@
             .cards-grid { grid-template-columns: 1fr; }
             .btn { width: 100%; margin: 5px 0; }
         }
+        /* Режим высокой контрастности */
+body.high-contrast {
+    background: black !important;
+    color: white !important;
+}
+body.high-contrast .card,
+body.high-contrast .btn,
+body.high-contrast .tab-btn {
+    background-color: #333 !important;
+    color: white !important;
+    border-color: yellow !important;
+}
+
+/* Крупный текст */
+body.large-text {
+    font-size: 24px !important;
+}
+body.large-text .btn {
+    font-size: 24px !important;
+    padding: 20px 40px !important;
+}
+
+/* Шрифт для дислексии (если хочешь реальный шрифт — подключи его) */
+body.dyslexia-friendly * {
+    font-family: 'OpenDyslexic', Arial, sans-serif !important;
+}
     </style>
 </head>
 <body>
